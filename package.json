@@ -3,9 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.5.1",
+    "@material-ui/icons": "^3.0.1",
+    "classnames": "^2.2.6",
+    "jwt-decode": "^2.2.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-scripts": "2.1.1"
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "2.1.1",
+    "react-translate": "^6.0.1",
+    "redux": "^4.0.1",
+    "rxjs": "^6.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
