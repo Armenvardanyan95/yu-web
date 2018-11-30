@@ -1,4 +1,4 @@
-import { SET_AUTH, SET_LANGUAGE, SET_USER } from './actions';
+import { SET_AUTH, SET_LANGUAGE, SET_USER, UPDATE_ORDERS } from './actions';
 
 const initialState = {
     isAuth: false,
@@ -15,6 +15,8 @@ export function handleStateChange(state = initialState, action) {
             return {...state, lang: action.lang};
         case SET_USER:
             return {...state, user: action.user};
+        case UPDATE_ORDERS:
+            return state;
         default:
             return state;
     }

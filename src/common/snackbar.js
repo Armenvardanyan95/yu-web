@@ -97,13 +97,16 @@ class Snackbars extends React.Component {
     state = {
         open: false,
         variant: 'success',
-        message: ''
+        message: '',
+        toBeTranslated: true,
     };
     unmount = new Subject();
 
     componentDidMount() {
         notificationService.onMessage.pipe(takeUntil(this.unmount))
-            .subscribe(({variant, message}) => this.setState({open: true, variant, message}))
+            .subscribe(({variant, message, toBeTranslated}) => {
+                this.setState({open: true, variant, message, toBeTranslated})
+            })
     }
 
     componentWillUnmount() {
@@ -134,7 +137,7 @@ class Snackbars extends React.Component {
                     <SnackbarContentWrapper
                         onClose={this.handleClose}
                         variant={this.state.variant}
-                        message={t(this.state.message)}
+                        message={this.state.toBeTranslated ? t(this.state.message) : this.state.message}
                     />
                 </Snackbar>
             </div>

@@ -8,7 +8,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { translate } from 'react-translate';
 import { withRouter } from 'react-router-dom';
 
-import { validateRequired, validateEmail } from '../common/validations';
+import { isRequired, isEmail } from '../common/validations';
 import userService from '../common/user.service';
 import notificationsService from '../common/notifications';
 
@@ -44,13 +44,13 @@ class ForgotPassword extends React.Component {
     handleChange = name => event => {
         this.setState({[name]: event.target.value}, () => {
             const field = this.state[name];
-            const requiredError = validateRequired(field);
+            const requiredError = isRequired(field);
             let errors = {};
             if (requiredError) {
                 errors[name] = requiredError;
             }
             if (name === 'email' && !errors[name]) {
-                const emailError = validateEmail(field);
+                const emailError = isEmail(field);
                 if (emailError) {
                     errors[name] = emailError;
                 }

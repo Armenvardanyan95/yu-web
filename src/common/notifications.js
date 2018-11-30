@@ -3,20 +3,20 @@ import { Subject, } from 'rxjs';
 class NotificationsService {
     onMessage = new Subject();
 
-    success(message) {
-        this.onMessage.next({variant: 'success', message});
+    success(message, toBeTranslated = true) {
+        this.onMessage.next({variant: 'success', message, toBeTranslated});
     }
 
-    warning(message) {
-        this.onMessage.next({variant: 'warning', message});
+    warning(message, toBeTranslated = true) {
+        this.onMessage.next({variant: 'warning', message, toBeTranslated});
     }
 
-    info(message) {
-        this.onMessage.next({variant: 'info', message});
+    info(message, toBeTranslated = true) {
+        this.onMessage.next({variant: 'info', message, toBeTranslated});
     }
 
-    error(message) {
-        this.onMessage.next({variant: 'error', message});
+    error(message, toBeTranslated = true) {
+        this.onMessage.next({variant: 'error', message, toBeTranslated});
     }
 }
 

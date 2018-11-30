@@ -2,7 +2,7 @@ import { ajax } from 'rxjs/ajax';
 import { map } from 'rxjs/operators';
 
 class Http {
-    baseUrl = 'http://localhost:8000/';
+    baseUrl = 'http://localhost:9000/';
     get token() {
         return localStorage.getItem('token') || null;
     };
@@ -27,8 +27,8 @@ class Http {
             .toPromise();
     }
 
-    post(url, body) {
-        return ajax({url: this.buildUrl(url), method: 'post', body, headers: this.headers, crossDomain: true})
+    post(url, body, hdr = {}) {
+        return ajax({url: this.buildUrl(url), method: 'post', body, headers: {...this.headers, ...hdr}, crossDomain: true})
             .pipe(map(res => res.response))
             .toPromise();
     }

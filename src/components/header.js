@@ -16,11 +16,13 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 
 import { store } from '../state/store';
-import { setLanguage } from '../state/actions';
+import { notificationsService } from '../common/notifications.service';
+import growlService from '../common/notifications';
+import { setAuth, setLanguage, setUser } from '../state/actions';
 
 const styles = theme => ({
     root: {
@@ -44,7 +46,7 @@ const styles = theme => ({
         borderRadius: theme.shape.borderRadius,
         backgroundColor: fade(theme.palette.common.white, 0.15),
         '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.25),
+            backgroundColor: fade(theme.palette.secondary.white, 0.25),
         },
         marginRight: theme.spacing.unit * 2,
         marginLeft: 0,
@@ -90,6 +92,10 @@ const styles = theme => ({
             display: 'none',
         },
     },
+    headerLink: {
+        textDecoration: 'none',
+        color: theme.palette.common.white,
+    },
 });
 
 class Header extends React.Component {
@@ -97,19 +103,45 @@ class Header extends React.Component {
         anchorEl: null,
         mobileMoreAnchorEl: null,
         isAuth: store.getState().isAuth,
-        lang: store.getState().lang
+        lang: store.getState().lang,
+        notifications: [],
     };
 
     componentDidMount() {
-        store.subscribe(() => this.setState({isAuth: store.getState().isAuth}));
+        this.getNotifications();
+        store.subscribe(() => {
+            this.getNotifications();
+            this.setState({isAuth: store.getState().isAuth});
+        });
+    }
+
+    getNotifications() {
+        const { isAuth, user } = store.getState();
+        if (isAuth && user) {
+            notificationsService.getNotifications();
+            notificationsService.subscribeToNotifications(notifications => console.log('arrrgxh', notifications));
+            notificationsService.subscribeToNewNotification(notification => {
+                const { t } = this.props;
+                growlService.info(notification.content + t(notification.type), false);
+                this.setState(prevState => ({notifications: [notification, ...prevState.notifications]}))
+            });
+        }
     }
 
     handleProfileMenuOpen = event => {
         this.setState({ anchorEl: event.currentTarget });
     };
 
-    handleMenuClose = () => {
+    handleMenuClose = name => () => {
         this.setState({ anchorEl: null });
+        switch (name) {
+            case 'SIGN_OUT':
+                localStorage.removeItem('token');
+                store.dispatch(setUser(null));
+                store.dispatch(setAuth(false));
+                this.props.history.push('/');
+                break;
+        }
         this.handleMobileMenuClose();
     };
 
@@ -141,10 +173,11 @@ class Header extends React.Component {
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 open={isMenuOpen}
-                onClose={this.handleMenuClose}
+                onClose={this.handleMenuClose('')}
             >
-                <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
+                <MenuItem onClick={this.handleMenuClose('')}>Profile</MenuItem>
+                <MenuItem onClick={this.handleMenuClose('')}>My account</MenuItem>
+                <MenuItem onClick={this.handleMenuClose('SIGN_OUT')}>{t('SIGN_OUT')}</MenuItem>
             </Menu>
         );
 
@@ -166,9 +199,20 @@ class Header extends React.Component {
                 </MenuItem>
                 <MenuItem>
                     <IconButton color="inherit">
-                        <Badge badgeContent={11} color="secondary">
-                            <NotificationsIcon/>
-                        </Badge>
+                        {
+                            (() => {
+                                const unreadCount = this.state.notifications.filter(n => !n.isRead).length;
+                                if (unreadCount > 0) {
+                                    return (
+                                        <Badge badgeContent={unreadCount} color="secondary">
+                                            <NotificationsIcon/>
+                                        </Badge>
+                                    )
+                                } else {
+                                    return (<NotificationsIcon/>);
+                                }
+                            })()
+                        }
                     </IconButton>
                     <p>Notifications</p>
                 </MenuItem>
@@ -189,9 +233,20 @@ class Header extends React.Component {
                     </Badge>
                 </IconButton>
                 <IconButton color="inherit">
-                    <Badge badgeContent={17} color="secondary">
-                        <NotificationsIcon/>
-                    </Badge>
+                    {
+                        (() => {
+                            const unreadCount = this.state.notifications.filter(n => !n.isRead).length;
+                            if (unreadCount > 0) {
+                                return (
+                                    <Badge badgeContent={unreadCount} color="secondary">
+                                        <NotificationsIcon/>
+                                    </Badge>
+                                )
+                            } else {
+                                return (<NotificationsIcon/>);
+                            }
+                        })()
+                    }
                 </IconButton>
                 <IconButton
                     aria-owns={isMenuOpen ? 'material-appbar' : undefined}
@@ -204,13 +259,14 @@ class Header extends React.Component {
             </div>
         );
 
-        const SignInLink = () => <Link to="/login">{t('SIGN_IN')}</Link>;
         const rightMenuUnAuth = (
             <div className={classes.sectionDesktop}>
-                <Button color="inherit" component={SignInLink} />
+                <Button color="inherit">
+                    <Link to="/login" className={classes.headerLink}>{t('SIGN_IN')}</Link>
+                </Button>
 
                 <Button color="inherit">
-                    {t('SIGN_UP')}
+                    <Link to="/sign-up" className={classes.headerLink}>{t('SIGN_UP')}</Link>
                 </Button>
             </div>
         );
@@ -245,4 +301,5 @@ class Header extends React.Component {
 }
 
 const styledComponent = withStyles(styles)(Header);
-export default translate('Header')(styledComponent);
+const componentWithRouter = withRouter(styledComponent);
+export default translate('Header')(componentWithRouter);
