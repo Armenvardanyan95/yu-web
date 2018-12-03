@@ -5,6 +5,7 @@ export const hy = {
         'SIGN_UP': 'Գրանցում',
         'SIGN_OUT': 'Դուրս գալ',
         'OrderUnderReview': ' ուսումնասիրվում է',
+        'DASHBOARD': 'Վահանակ',
     },
     Login: {
         'ENTER': 'Մուտք գործել',

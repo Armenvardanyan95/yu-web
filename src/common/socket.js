@@ -19,7 +19,12 @@ class SocketService {
     }
 
     listenTo(notificationName) {
+        console.log('vitolo jan, inch ka?', notificationName);
         return {subscribe: cb => socket.on(notificationName, cb)};
+    }
+
+    unsubscribe(channelName) {
+        socket.removeListener(channelName);
     }
 }
 

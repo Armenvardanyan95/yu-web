@@ -5,6 +5,7 @@ export const ru = {
         'SIGN_UP': 'Регистрация',
         'SIGN_OUT': 'Выйти',
         'OrderUnderReview': ' рассматривается',
+        'DASHBOARD': 'Панель',
     },
     Login: {
         'ENTER': 'Войти',

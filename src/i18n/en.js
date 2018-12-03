@@ -5,6 +5,7 @@ export const en = {
         'SIGN_UP': 'Sign Up',
         'SIGN_OUT': 'Sign out',
         'OrderUnderReview': ' is under review',
+        'DASHBOARD': 'Dashboard',
     },
     Login: {
         'ENTER': 'Enter',

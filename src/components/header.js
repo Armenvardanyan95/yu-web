@@ -108,7 +108,6 @@ class Header extends React.Component {
     };
 
     componentDidMount() {
-        this.getNotifications();
         store.subscribe(() => {
             this.getNotifications();
             this.setState({isAuth: store.getState().isAuth});
@@ -118,8 +117,9 @@ class Header extends React.Component {
     getNotifications() {
         const { isAuth, user } = store.getState();
         if (isAuth && user) {
+            notificationsService.unsubscribeFromNewNotifications();
             notificationsService.getNotifications();
-            notificationsService.subscribeToNotifications(notifications => console.log('arrrgxh', notifications));
+            notificationsService.subscribeToNotifications(notifications => this.setState({notifications}));
             notificationsService.subscribeToNewNotification(notification => {
                 const { t } = this.props;
                 growlService.info(notification.content + t(notification.type), false);
@@ -141,6 +141,8 @@ class Header extends React.Component {
                 store.dispatch(setAuth(false));
                 this.props.history.push('/');
                 break;
+            case 'DASHBOARD':
+                this.props.history.push('/dashboard')
         }
         this.handleMobileMenuClose();
     };
@@ -160,6 +162,11 @@ class Header extends React.Component {
         store.dispatch(setLanguage(lang));
     };
 
+    componentWillUnmount() {
+        alert('aaaa')
+        notificationsService.unsubscribeFromNewNotifications();
+    }
+
     render() {
         const {anchorEl, mobileMoreAnchorEl, isAuth} = this.state;
         const {classes, t} = this.props;
@@ -177,6 +184,7 @@ class Header extends React.Component {
             >
                 <MenuItem onClick={this.handleMenuClose('')}>Profile</MenuItem>
                 <MenuItem onClick={this.handleMenuClose('')}>My account</MenuItem>
+                <MenuItem onClick={this.handleMenuClose('DASHBOARD')}>{t('DASHBOARD')}</MenuItem>
                 <MenuItem onClick={this.handleMenuClose('SIGN_OUT')}>{t('SIGN_OUT')}</MenuItem>
             </Menu>
         );

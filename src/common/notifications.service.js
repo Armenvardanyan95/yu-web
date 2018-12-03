@@ -15,6 +15,10 @@ class NotificationsService {
         console.log('state', state)
         socketService.listenTo('notifications_' + state.user.id).subscribe(cb);
     }
+
+    unsubscribeFromNewNotifications() {
+        socketService.unsubscribe('onNotifications');
+    }
 }
 
 const notificationsService = new NotificationsService();

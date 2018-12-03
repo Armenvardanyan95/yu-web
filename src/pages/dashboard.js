@@ -51,15 +51,15 @@ class Dashboard extends React.Component {
                         <MenuList>
                             <MenuItem selected={this.state.activePage === 1} onClick={() => this.changePage(1)}>
                                 <ListItemIcon>
-                                    <AccountBoxRoundedIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary={t('PROFILE')}/>
-                            </MenuItem>
-                            <MenuItem selected={this.state.activePage === 2}  onClick={() => this.changePage(2)}>
-                                <ListItemIcon>
                                     <BookmarkIcon/>
                                 </ListItemIcon>
                                 <ListItemText primary={t('ORDERS')}/>
+                            </MenuItem>
+                            <MenuItem selected={this.state.activePage === 2}  onClick={() => this.changePage(2)}>
+                                <ListItemIcon>
+                                    <AccountBoxRoundedIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary={t('PROFILE')}/>
                             </MenuItem>
                         </MenuList>
                     </Paper>
@@ -68,9 +68,9 @@ class Dashboard extends React.Component {
                             (() => {
                                switch (this.state.activePage) {
                                    case 1:
-                                       return (<div><Profile/></div>);
-                                   case 2:
                                        return (<div><Orders/></div>);
+                                   case 2:
+                                       return (<div><Profile/></div>);
                                }
                             })()
                         }
