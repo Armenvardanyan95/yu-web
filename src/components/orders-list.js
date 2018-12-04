@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -18,6 +19,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { withStyles } from '@material-ui/core';
 import { translate } from 'react-translate';
+import queryString from 'query-string';
 
 import orderService from '../common/order.service';
 import notificationService from '../common/notifications';
@@ -40,7 +42,11 @@ const styles = theme => ({
     },
     empty: {
         width: '100%',
-    }
+    },
+    highlight: {
+        borderWidth: 2,
+        borderColor: 'aquamarine',
+    },
 });
 
 class OrdersList extends React.Component {
@@ -49,9 +55,12 @@ class OrdersList extends React.Component {
         detailsDialogOpen: false,
         cancelDialogOpen: false,
         selectedOrder: undefined,
+        highlight: undefined,
     };
 
     componentDidMount() {
+        const  { highlight } = queryString.parse(this.props.location.search);
+        setTimeout(() => this.setState({highlight: +highlight}), 200);
         this.getOrders();
         store.subscribe(() => this.getOrders());
     }
@@ -60,7 +69,6 @@ class OrdersList extends React.Component {
         const res = await orderService.getMyOrders();
         if (res.success) {
             this.setState({orders: res.data});
-            console.log(res.data);
         } else {
             notificationService.error(res.message);
         }
@@ -89,6 +97,8 @@ class OrdersList extends React.Component {
 
     render() {
         const { t, classes } = this.props;
+        const { highlight } = this.state;
+        console.log('high', highlight);
         return (
             <div>
                 <Paper className={classes.paper}>
@@ -109,7 +119,7 @@ class OrdersList extends React.Component {
                                         return (
                                             this.state.orders.map(order => {
                                                 return (
-                                                    <TableRow key={order.id}>
+                                                    <TableRow key={order.id} selected={order.id === highlight}>
                                                         <TableCell>{order.title}</TableCell>
                                                         <TableCell>{order.type}</TableCell>
                                                         <TableCell>
@@ -185,4 +195,5 @@ const OrderCancel = ({open, handleClose, t, handleCancel, order = {}}) => (
 );
 
 const styledComponent = withStyles(styles)(OrdersList);
-export default translate('OrderList')(styledComponent);
+const componentWithRouter = withRouter(styledComponent);
+export default translate('OrderList')(componentWithRouter);

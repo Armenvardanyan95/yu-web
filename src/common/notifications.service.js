@@ -6,6 +6,14 @@ class NotificationsService {
         socketService.sendMessage('getNotifications')
     }
 
+    deleteNotification(id) {
+        socketService.sendMessage('deleteNotification', {id});
+    }
+
+    markAsRead(id) {
+        socketService.sendMessage('markAsRead', {id});
+    }
+
     subscribeToNotifications(cb) {
         socketService.listenTo('onNotifications').subscribe(cb);
     }

@@ -1,3 +1,8 @@
+const notificationTypes = {
+    'GOT_ORDER_UNDER_REVIEW': 'Ваш заказ просматривается',
+};
+
+
 export const ru = {
     locale: 'ru',
     Header: {
@@ -6,6 +11,7 @@ export const ru = {
         'SIGN_OUT': 'Выйти',
         'OrderUnderReview': ' рассматривается',
         'DASHBOARD': 'Панель',
+        ...notificationTypes,
     },
     Login: {
         'ENTER': 'Войти',

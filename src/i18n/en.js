@@ -1,3 +1,7 @@
+const notificationTypes = {
+    'GOT_ORDER_UNDER_REVIEW': 'Order is under review',
+};
+
 export const en = {
     locale: 'en',
     Header: {
@@ -6,6 +10,7 @@ export const en = {
         'SIGN_OUT': 'Sign out',
         'OrderUnderReview': ' is under review',
         'DASHBOARD': 'Dashboard',
+        ...notificationTypes,
     },
     Login: {
         'ENTER': 'Enter',

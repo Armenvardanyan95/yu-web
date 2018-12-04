@@ -1,3 +1,8 @@
+const notificationTypes = {
+    'GOT_ORDER_UNDER_REVIEW': 'Ձեր պատվերը ուսումնասիրվում է',
+};
+
+
 export const hy = {
     locale: 'en',
     Header: {
@@ -6,6 +11,7 @@ export const hy = {
         'SIGN_OUT': 'Դուրս գալ',
         'OrderUnderReview': ' ուսումնասիրվում է',
         'DASHBOARD': 'Վահանակ',
+        ...notificationTypes,
     },
     Login: {
         'ENTER': 'Մուտք գործել',

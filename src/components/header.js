@@ -4,19 +4,26 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import Menu from '@material-ui/core/Menu';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import CloseIcon from '@material-ui/icons/Close';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import CheckIcon from '@material-ui/icons/Check';
 import { Link, withRouter } from 'react-router-dom';
+import classNames from 'classnames';
 
 
 import { store } from '../state/store';
@@ -96,11 +103,68 @@ const styles = theme => ({
         textDecoration: 'none',
         color: theme.palette.common.white,
     },
+    singleNotification: {
+        minHeight: 50,
+    },
+    deleteNotification: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+    },
+    unread: {
+        backgroundColor: '#D3D3D3',
+    },
 });
+
+const StatusIcon = ({type}) => {
+    switch (type) {
+        case 'OrderUnderReview':
+            return <ZoomInIcon/>;
+        case 'OrderApproved':
+            return <CheckIcon/>;
+        default:
+            return null;
+    }
+};
+
+const Notification = ({notification, t, classes, handleClose, handleClick, last = false}) => ([
+    <MenuItem onClose={handleClose} className={classNames(classes.singleNotification, notification.isRead ? null : classes.unread)}
+              onClick={handleClick}>
+        <ListItemIcon>
+            <StatusIcon type={notification.type}/>
+        </ListItemIcon>
+        <ListItemText>
+            <p>{t(notification.title)}</p>
+            <p>{notification.content + t(notification.type)}</p>
+        </ListItemText>
+        <IconButton onClick={handleClose} className={classes.deleteNotification}>
+            <CloseIcon/>
+        </IconButton>
+    </MenuItem>,
+    last ? null : <Divider/>
+]);
+
+const Notifications = ({notifications, t, classes, handleMenuClose, handleClick, isMenuOpen, anchorEl}) => (
+    <Menu anchorEl={anchorEl}
+          getContentAnchorEl={null}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={isMenuOpen}
+          onClose={handleMenuClose('')}>
+            {
+                notifications.map((notification, index) =>
+                    (<Notification key={notification.id} notification={notification}
+                                   t={t} last={index === notifications.length - 1}
+                                   handleClick={handleClick(notification.order.id, notification.id)}
+                                   classes={classes} handleClose={handleMenuClose(notification.id)}/>))
+            }
+    </Menu>
+);
 
 class Header extends React.Component {
     state = {
         anchorEl: null,
+        notificationsAnchor: null,
         mobileMoreAnchorEl: null,
         isAuth: store.getState().isAuth,
         lang: store.getState().lang,
@@ -132,6 +196,8 @@ class Header extends React.Component {
         this.setState({ anchorEl: event.currentTarget });
     };
 
+    handleNotificationsMenuOpen = event => this.setState({notificationsAnchor: event.currentTarget});
+
     handleMenuClose = name => () => {
         this.setState({ anchorEl: null });
         switch (name) {
@@ -155,6 +221,19 @@ class Header extends React.Component {
         this.setState({ mobileMoreAnchorEl: null });
     };
 
+    handleNotificationClose = id => () => {
+        if (id) {
+            notificationsService.deleteNotification(id);
+        } else {
+            this.setState({notificationsAnchor: null});
+        }
+    };
+
+    handleNotificationClick = (orderID, notificationID) => () => {
+        this.props.history.push(`/dashboard?highlight=${orderID}`);
+        notificationsService.markAsRead(notificationID);
+    };
+
     changeLang = event => {
         const lang = event.target.value;
         console.log();
@@ -168,25 +247,32 @@ class Header extends React.Component {
     }
 
     render() {
-        const {anchorEl, mobileMoreAnchorEl, isAuth} = this.state;
+        const {anchorEl, notificationsAnchor, mobileMoreAnchorEl, isAuth, notifications} = this.state;
         const {classes, t} = this.props;
         const isMenuOpen = Boolean(anchorEl);
+        const isNotificationsOpen = !!notificationsAnchor;
         const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
         const renderMenu = (
-            <Menu
-                anchorEl={anchorEl}
-                getContentAnchorEl={null}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                open={isMenuOpen}
-                onClose={this.handleMenuClose('')}
-            >
-                <MenuItem onClick={this.handleMenuClose('')}>Profile</MenuItem>
-                <MenuItem onClick={this.handleMenuClose('')}>My account</MenuItem>
-                <MenuItem onClick={this.handleMenuClose('DASHBOARD')}>{t('DASHBOARD')}</MenuItem>
-                <MenuItem onClick={this.handleMenuClose('SIGN_OUT')}>{t('SIGN_OUT')}</MenuItem>
-            </Menu>
+            [
+                <Menu
+                    anchorEl={anchorEl}
+                    getContentAnchorEl={null}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                    open={isMenuOpen}
+                    onClose={this.handleMenuClose('')}
+                >
+                    <MenuItem onClick={this.handleMenuClose('')}>Profile</MenuItem>
+                    <MenuItem onClick={this.handleMenuClose('')}>My account</MenuItem>
+                    <MenuItem onClick={this.handleMenuClose('DASHBOARD')}>{t('DASHBOARD')}</MenuItem>
+                    <MenuItem onClick={this.handleMenuClose('SIGN_OUT')}>{t('SIGN_OUT')}</MenuItem>
+                </Menu>,
+                <Notifications notifications={notifications} t={name => t(name)} isMenuOpen={isNotificationsOpen}
+                               handleClick={this.handleNotificationClick}
+                               classes={classes} anchorEl={notificationsAnchor}
+                               handleMenuClose={this.handleNotificationClose}/>
+            ]
         );
 
         const renderMobileMenu = (
@@ -240,7 +326,7 @@ class Header extends React.Component {
                         <MailIcon/>
                     </Badge>
                 </IconButton>
-                <IconButton color="inherit">
+                <IconButton color="inherit" onClick={this.handleNotificationsMenuOpen}>
                     {
                         (() => {
                             const unreadCount = this.state.notifications.filter(n => !n.isRead).length;
