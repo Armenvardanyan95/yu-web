@@ -242,7 +242,6 @@ class Header extends React.Component {
     };
 
     componentWillUnmount() {
-        alert('aaaa')
         notificationsService.unsubscribeFromNewNotifications();
     }
 

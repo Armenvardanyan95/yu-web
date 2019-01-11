@@ -20,7 +20,6 @@ class NotificationsService {
 
     subscribeToNewNotification(cb) {
         const state = store.getState();
-        console.log('state', state)
         socketService.listenTo('notifications_' + state.user.id).subscribe(cb);
     }
 

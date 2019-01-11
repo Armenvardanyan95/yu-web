@@ -2,6 +2,12 @@ const notificationTypes = {
     'GOT_ORDER_UNDER_REVIEW': 'Ваш заказ просматривается',
 };
 
+const services = {
+    'INSPECTION': 'Проверка юридического документа',
+    'TRANSLATION': 'Перевод юридического документа',
+    'CREATION': 'Оформление юридического документа',
+};
+
 
 export const ru = {
     locale: 'ru',
@@ -51,7 +57,8 @@ export const ru = {
     },
     Dashboard: {
         'PROFILE': 'Мой профиль',
-        'ORDERS': 'Мои заказы'
+        'ORDERS': 'Мои заказы',
+        'MESSAGING': 'Сообщения',
     },
     Profile: {
         'FIRST_NAME': 'Имя',
@@ -72,10 +79,8 @@ export const ru = {
         'TITLE': 'Название',
         'UPLOAD_FILE': 'Загрузить файл',
         'TYPE': 'Тип',
-        'INSPECTION': 'Проверка юридического документа',
-        'TRANSLATION': 'Перевод юридического документа',
-        'CREATION': 'Оформление юридического документа',
         'SUBMIT': 'Сохранить',
+        ...services,
     },
     OrderList: {
         'ORDER_TITLE': 'Название',
@@ -101,5 +106,10 @@ export const ru = {
         'CONFIRM_NEW_PASSWORD': 'Повторите Новый Пароль',
         'CANCEL': 'Отменить',
         'SUBMIT': 'Сохранить',
+    },
+    ChatBox: {
+        'TYPING': 'печатает',
+        'SEND': 'Отправить сообщение',
+        'ATTACH': 'Прикрепить файл',
     },
 };

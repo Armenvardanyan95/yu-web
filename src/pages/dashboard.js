@@ -4,6 +4,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Paper from '@material-ui/core/Paper';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AccountBoxRoundedIcon from '@material-ui/icons/AccountBoxRounded';
+import MessageIcon from '@material-ui/icons/Message';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
 import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/core';
@@ -11,6 +12,7 @@ import { translate } from 'react-translate';
 
 import Profile from '../components/profile';
 import Orders from '../components/orders';
+import Messaging from '../components/messaging/messaging';
 
 const styles = theme => ({
     container: {
@@ -61,6 +63,12 @@ class Dashboard extends React.Component {
                                 </ListItemIcon>
                                 <ListItemText primary={t('PROFILE')}/>
                             </MenuItem>
+                            <MenuItem selected={this.state.activePage === 3}  onClick={() => this.changePage(3)}>
+                                <ListItemIcon>
+                                    <MessageIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary={t('MESSAGING')}/>
+                            </MenuItem>
                         </MenuList>
                     </Paper>
                     <Paper className={classes.paperPage}>
@@ -71,6 +79,8 @@ class Dashboard extends React.Component {
                                        return (<div><Orders/></div>);
                                    case 2:
                                        return (<div><Profile/></div>);
+                                   case 3:
+                                       return (<div><Messaging/></div>);
                                }
                             })()
                         }

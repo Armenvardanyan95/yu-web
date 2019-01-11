@@ -15,6 +15,7 @@ import Snackbars from './common/snackbar';
 import { setAuth, setUser } from './state/actions';
 import userService from './common/user.service';
 import notificationService from './common/notifications';
+import { messagesService } from './common/messages.service';
 
 const theme = createMuiTheme();
 
@@ -32,6 +33,9 @@ class App extends Component {
         store.dispatch(setAuth(true));
         if (isAuth) {
             this.getUser();
+            messagesService.toggleOnline(true);
+            setInterval(() => messagesService.toggleOnline(true), 5000);
+            window.addEventListener('beforeunload', () => messagesService.toggleOnline(false))
         }
     }
 

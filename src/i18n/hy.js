@@ -2,6 +2,11 @@ const notificationTypes = {
     'GOT_ORDER_UNDER_REVIEW': 'Ձեր պատվերը ուսումնասիրվում է',
 };
 
+const services = {
+    'INSPECTION': 'Փաստաթղթի ստուգում',
+    'TRANSLATION': 'Փաստաթղթի թարգմանություն',
+    'CREATION': 'Փաստաթղթի կազմում',
+};
 
 export const hy = {
     locale: 'en',
@@ -51,7 +56,8 @@ export const hy = {
     },
     Dashboard: {
         'PROFILE': 'Իմ էջը',
-        'ORDERS': 'Իմ պատվերները'
+        'ORDERS': 'Իմ պատվերները',
+        'MESSAGING': 'նամակներ',
     },
     Profile: {
         'FIRST_NAME': 'Անուն',
@@ -72,10 +78,8 @@ export const hy = {
         'TITLE': 'Վերնագիր',
         'UPLOAD_FILE': 'Ներվեռնել ֆայլ',
         'TYPE': 'Տեսակ',
-        'INSPECTION': 'Փաստաթղթի ստուգում',
-        'TRANSLATION': 'Փաստաթղթի թարգմանություն',
-        'CREATION': 'Փաստաթղթի կազմում',
         'SUBMIT': 'Ուղարկել',
+        ...services,
     },
     OrderList: {
         'ORDER_TITLE': 'Վերնագիր',
@@ -101,5 +105,10 @@ export const hy = {
         'CONFIRM_NEW_PASSWORD': 'Կրկնեք Նոր Գաղտնաբառը',
         'CANCEL': 'Չեղարկել',
         'SUBMIT': 'Պահպանել',
+    },
+    ChatBox: {
+        'TYPING': 'տպում է',
+        'SEND': 'Ուղարկել հաղորդագրությունը',
+        'ATTACH': 'Կցել ֆայլ',
     },
 };

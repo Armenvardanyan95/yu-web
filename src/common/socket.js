@@ -14,12 +14,10 @@ class SocketService {
 
     sendMessage(handler, data = {}) {
         const send = this.buildData(data);
-        console.log('apchi', send);
         socket.emit(handler, send);
     }
 
     listenTo(notificationName) {
-        console.log('vitolo jan, inch ka?', notificationName);
         return {subscribe: cb => socket.on(notificationName, cb)};
     }
 

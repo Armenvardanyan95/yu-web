@@ -2,6 +2,12 @@ const notificationTypes = {
     'GOT_ORDER_UNDER_REVIEW': 'Order is under review',
 };
 
+const services = {
+    'INSPECTION': 'Inspection of a legal document',
+    'TRANSLATION': 'Translation of a legal document',
+    'CREATION': 'Creation of a legal document',
+};
+
 export const en = {
     locale: 'en',
     Header: {
@@ -49,7 +55,8 @@ export const en = {
     },
     Dashboard: {
         'PROFILE': 'My account',
-        'ORDERS': 'My orders'
+        'ORDERS': 'My orders',
+        'MESSAGING': 'Messages',
     },
     Profile: {
         'EMAIL': 'Email',
@@ -71,10 +78,8 @@ export const en = {
         'TITLE': 'Title',
         'UPLOAD_FILE': 'Upload File',
         'TYPE': 'Type',
-        'INSPECTION': 'Inspection of a legal document',
-        'TRANSLATION': 'Translation of a legal document',
-        'CREATION': 'Creation of a legal document',
         'SUBMIT': 'Submit',
+        ...services,
     },
     OrderList: {
         'ORDER_TITLE': 'Title',
@@ -101,5 +106,10 @@ export const en = {
         'CONFIRM_NEW_PASSWORD': 'Confirm New Password',
         'CANCEL': 'Cancel',
         'SUBMIT': 'Submit',
+    },
+    ChatBox: {
+        'TYPING': 'is typing',
+        'SEND': 'Send message',
+        'ATTACH': 'Attach a file',
     },
 };
